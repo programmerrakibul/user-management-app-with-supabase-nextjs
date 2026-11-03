@@ -1,25 +1,10 @@
+import AccountForm from "@/components/account-form";
 import { createClient } from "@/lib/supabase/server";
-import { Suspense } from "react";
 
-const AccountPage = async () => {
+export default async function Account() {
   const supabase = await createClient();
-  const res = await supabase.auth.getSession();
 
-  console.error(res);
+  const { data: claimsData } = await supabase.auth.getClaims();
 
-  return (
-    <section>
-      <h1>Welcome User</h1>
-    </section>
-  );
-};
-
-const Account = () => {
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <AccountPage />
-    </Suspense>
-  );
-};
-
-export default Account;
+  return <AccountForm claims={claimsData?.claims ?? null} />;
+}
